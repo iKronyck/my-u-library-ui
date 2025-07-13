@@ -75,7 +75,7 @@ const navigation = [
   },
 ];
 
-export default function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
