@@ -19,10 +19,12 @@
       }
     ],
     "paths": {
+      "@/api/*": ["./src/api/*"],
       "@/assets/*": ["./src/assets/*"],
       "@/components/*": ["./src/components/*"],
       "@/lib": ["./src/lib"],
-      "@/hooks": ["./src/hooks"]
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/types": ["./src/types"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
