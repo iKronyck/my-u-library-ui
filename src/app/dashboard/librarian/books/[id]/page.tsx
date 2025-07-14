@@ -1,9 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useGetBook, usePutBook } from "@/hooks/books";
+import { useGetBook, usePutBook, useDeleteBook } from "@/hooks/books";
 import { useState } from "react";
-import { Button, Input } from "@/components/ui";
+import { Button, Input, Modal } from "@/components/ui";
 
 export default function BookDetailPage() {
   const params = useParams();
@@ -11,7 +11,10 @@ export default function BookDetailPage() {
 
   const { data: book, isLoading, error } = useGetBook(bookId);
   const { mutate: putBook } = usePutBook(bookId);
+  const { mutate: deleteBook } = useDeleteBook(bookId);
+
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -62,6 +65,19 @@ export default function BookDetailPage() {
     setIsEditing(false);
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteBook();
+    setShowDeleteModal(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
   if (!book) return <div>Book not found</div>;
@@ -81,6 +97,7 @@ export default function BookDetailPage() {
             {isEditing ? "Editando libro" : "Detalles del libro"}
           </p>
         </div>
+        {/*  */}
         <div className="flex space-x-3">
           {!isEditing ? (
             <Button
@@ -99,7 +116,10 @@ export default function BookDetailPage() {
             </>
           )}
           {!isEditing && (
-            <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+              onClick={handleDeleteClick}
+            >
               Eliminar
             </button>
           )}
@@ -149,6 +169,18 @@ export default function BookDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Book"
+        message="Are you sure you want to delete this book? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+      />
     </div>
   );
 }
