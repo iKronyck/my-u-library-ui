@@ -90,26 +90,26 @@ export default function BookDetailPage() {
             href="/dashboard/librarian/books"
             className="text-primary hover:text-primary/80 mb-4 inline-block"
           >
-            ← Volver al catálogo
+            ← Back to books
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">{book.title}</h1>
           <p className="text-gray-600">
-            {isEditing ? "Editando libro" : "Detalles del libro"}
+            {isEditing ? "Editing book" : "Book details"}
           </p>
         </div>
         {/*  */}
         <div className="flex space-x-3">
           {!isEditing ? (
             <Button
-              title="Editar"
+              title="Edit Book"
               variant="primary"
               onClick={() => setIsEditing(true)}
             />
           ) : (
             <>
-              <Button title="Guardar" variant="primary" onClick={handleSave} />
+              <Button title="Update" variant="primary" onClick={handleSave} />
               <Button
-                title="Cancelar"
+                title="Cancel"
                 variant="secondary"
                 onClick={handleCancel}
               />
@@ -120,7 +120,7 @@ export default function BookDetailPage() {
               className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
               onClick={handleDeleteClick}
             >
-              Eliminar
+              Delete
             </button>
           )}
         </div>

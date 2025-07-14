@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetBooks } from "@/hooks/books";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function BooksPage() {
@@ -25,9 +26,12 @@ export default function BooksPage() {
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Catálogo de Libros
             </h3>
-            <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90">
-              Agregar Libro
-            </button>
+            <Link
+              href="/dashboard/librarian/books/create"
+              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
+            >
+              Add Book
+            </Link>
           </div>
 
           <div className="overflow-x-auto">
