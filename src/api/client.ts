@@ -86,13 +86,28 @@ class ApiClient {
     }
   }
 
-  public async put<T>(
+  public async put<T, D = unknown>(
     url: string,
-    data?: T,
+    data?: D,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<T>> {
     try {
       return await this.axiosInstance.put<T>(url, data, config);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("API Error:", error.response?.data || error.message);
+      }
+      throw error;
+    }
+  }
+
+  public async patch<T, D = unknown>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
+    try {
+      return await this.axiosInstance.patch<T>(url, data, config);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error("API Error:", error.response?.data || error.message);
