@@ -1,14 +1,66 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useGetBook } from "@/hooks/books";
+import { useGetBook, usePutBook } from "@/hooks/books";
+import { useState } from "react";
+import { Button, Input } from "@/components/ui";
 
 export default function BookDetailPage() {
   const params = useParams();
-  const { push } = useRouter();
   const bookId = params.id as string;
 
   const { data: book, isLoading, error } = useGetBook(bookId);
+  const { mutate: putBook } = usePutBook(bookId);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    author: "",
+    genre: "",
+    published_year: "",
+    stock_quantity: "",
+  });
+
+  if (book && !formData.title) {
+    setFormData({
+      title: book.title,
+      author: book.author,
+      genre: book.genre,
+      published_year: book.published_year.toString(),
+      stock_quantity: book.stock_quantity.toString(),
+    });
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = () => {
+    putBook({
+      title: formData.title,
+      author: formData.author,
+      genre: formData.genre,
+      published_year: parseInt(formData.published_year),
+      stock_quantity: parseInt(formData.stock_quantity),
+    });
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    if (book) {
+      setFormData({
+        title: book.title,
+        author: book.author,
+        genre: book.genre,
+        published_year: book.published_year.toString(),
+        stock_quantity: book.stock_quantity.toString(),
+      });
+    }
+    setIsEditing(false);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -25,77 +77,76 @@ export default function BookDetailPage() {
             ← Volver al catálogo
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">{book.title}</h1>
-          <p className="text-gray-600">Detalles del libro</p>
+          <p className="text-gray-600">
+            {isEditing ? "Editando libro" : "Detalles del libro"}
+          </p>
         </div>
         <div className="flex space-x-3">
-          <button
-            className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
-            onClick={() => push(`/dashboard/librarian/books/${bookId}/edit`)}
-          >
-            Editar
-          </button>
-          <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
-            Eliminar
-          </button>
+          {!isEditing ? (
+            <Button
+              title="Editar"
+              variant="primary"
+              onClick={() => setIsEditing(true)}
+            />
+          ) : (
+            <>
+              <Button title="Guardar" variant="primary" onClick={handleSave} />
+              <Button
+                title="Cancelar"
+                variant="secondary"
+                onClick={handleCancel}
+              />
+            </>
+          )}
+          {!isEditing && (
+            <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+              Eliminar
+            </button>
+          )}
         </div>
       </div>
 
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-            <div>
-              <dt className="text-sm font-medium text-gray-500">Título</dt>
-              <dd className="mt-1 text-sm text-gray-900">{book.title}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">Autor</dt>
-              <dd className="mt-1 text-sm text-gray-900">{book.author}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">Género</dt>
-              <dd className="mt-1 text-sm text-gray-900">{book.genre}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">
-                Año de publicación
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {book.published_year}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">
-                Cantidad en stock
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {book.stock_quantity}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">
-                ID del libro
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 font-mono">
-                {book.id}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">
-                Fecha de creación
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {new Date(book.created_at).toLocaleDateString("es-ES")}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500">
-                Última actualización
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {new Date(book.updated_at).toLocaleDateString("es-ES")}
-              </dd>
-            </div>
-          </dl>
+          <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <Input
+              label="Title"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+            <Input
+              label="Author"
+              name="author"
+              value={formData.author}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+            <Input
+              label="Genre"
+              name="genre"
+              value={formData.genre}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+            <Input
+              label="Published Year"
+              name="published_year"
+              type="number"
+              value={formData.published_year}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+            <Input
+              label="Stock Quantity"
+              name="stock_quantity"
+              type="number"
+              value={formData.stock_quantity}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+          </div>
         </div>
       </div>
     </div>
