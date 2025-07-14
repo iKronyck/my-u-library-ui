@@ -18,7 +18,6 @@ export interface CreateBookRequest {
 }
 
 export interface UpdateBookRequest {
-  id: string;
   title?: string;
   author?: string;
   published_year?: number;
