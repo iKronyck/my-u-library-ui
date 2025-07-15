@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/assets/svg/logo.svg";
+import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
   user?: {
@@ -11,6 +12,8 @@ interface HeaderProps {
 }
 
 export function Header({ user }: HeaderProps) {
+  const { handleLogout } = useAuth();
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,6 +43,12 @@ export function Header({ user }: HeaderProps) {
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                  Logout
+                </button>
               </div>
             )}
           </div>
