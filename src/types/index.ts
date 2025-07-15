@@ -19,3 +19,5 @@ export type {
   CreateUserRequest,
   UpdateUserRequest,
 } from "./user";
+export type { Loan, ReturnLoanRequest, MarkLostRequest } from "./loan";
+export type { DashboardStats, ActivityFeedItem } from "./dashboard";
