@@ -9,6 +9,23 @@ export function middleware(request: NextRequest) {
   );
 
   if (isPublicRoute) {
+    const authToken = request.cookies.get("auth-storage");
+
+    if (authToken) {
+      try {
+        const authData = JSON.parse(authToken.value);
+        if (authData.state?.isAuthenticated && authData.state?.user?.role) {
+          const redirectUrl =
+            authData.state.user.role === "librarian"
+              ? "/dashboard/librarian"
+              : "/dashboard/student";
+          return NextResponse.redirect(new URL(redirectUrl, request.url));
+        }
+      } catch (error) {
+        console.error("Error parsing auth cookie:", error);
+      }
+    }
+
     return NextResponse.next();
   }
 
