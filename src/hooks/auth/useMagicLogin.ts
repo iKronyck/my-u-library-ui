@@ -27,11 +27,9 @@ export const useMagicLogin = () => {
         role: response.user.role,
       };
 
-      login(response.access_token, userData);
+      login(response.access, userData, response.refresh);
 
       toast.success("Authentication successful");
-
-      console.log(response.user.role);
 
       if (response.user.role === "librarian") {
         router.push("/dashboard/librarian");

@@ -5,7 +5,8 @@ import { useMagicLogin } from "./auth";
 
 export const useAuth = () => {
   const router = useRouter();
-  const { token, user, isAuthenticated, isLoading, logout } = useAuthStore();
+  const { token, refreshToken, user, isAuthenticated, isLoading, logout } =
+    useAuthStore();
   const { mutate: verifyMagicLink, isPending: isVerifying } = useMagicLogin();
 
   const handleMagicLinkAuth = useCallback(
@@ -22,6 +23,7 @@ export const useAuth = () => {
 
   return {
     token,
+    refreshToken,
     user,
     isAuthenticated,
     isLoading: isLoading || isVerifying,
