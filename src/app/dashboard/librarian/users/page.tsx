@@ -1,24 +1,36 @@
+"use client";
+import { useGetUsers } from "@/hooks/users";
+import { Button } from "@/components/ui";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 export default function UsersPage() {
+  const { data: users, isLoading, error } = useGetUsers();
+  const router = useRouter();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const handleRowClick = (userId: string) => {
+    router.push(`/dashboard/librarian/users/${userId}`);
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          Gestión de Usuarios
-        </h1>
-        <p className="text-gray-600">
-          Administra los usuarios de la biblioteca
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+        <p className="text-gray-600">Manage library users</p>
       </div>
 
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Lista de Usuarios
+              User List
             </h3>
-            <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90">
-              Agregar Usuario
-            </button>
+            <Link href="/dashboard/librarian/users/create">
+              <Button title="Add User" variant="primary" />
+            </Link>
           </div>
 
           <div className="overflow-x-auto">
@@ -26,134 +38,47 @@ export default function UsersPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nombre
+                    Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Email
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rol
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Estado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
+                    Role
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <div className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center">
-                          <span className="text-sm font-medium text-white">
-                            M
-                          </span>
+                {users?.map((user) => (
+                  <tr
+                    key={user.id}
+                    onClick={() => handleRowClick(user.id)}
+                    className="cursor-pointer hover:bg-gray-50 transition-colors duration-150"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 flex-shrink-0">
+                          <div className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center">
+                            <span className="text-sm font-medium text-white">
+                              {user.first_name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.first_name} {user.last_name}
+                          </div>
                         </div>
                       </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          María García
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    maria.garcia@example.com
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    Estudiante
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      Activo
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-primary hover:text-primary/90 mr-2">
-                      Editar
-                    </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      Desactivar
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <div className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center">
-                          <span className="text-sm font-medium text-white">
-                            C
-                          </span>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          Carlos López
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    carlos.lopez@example.com
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    Profesor
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      Activo
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-primary hover:text-primary/90 mr-2">
-                      Editar
-                    </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      Desactivar
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <div className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center">
-                          <span className="text-sm font-medium text-white">
-                            J
-                          </span>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          Juan Pérez
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    juan.perez@example.com
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    Bibliotecario
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      Activo
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-primary hover:text-primary/90 mr-2">
-                      Editar
-                    </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      Desactivar
-                    </button>
-                  </td>
-                </tr>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
+                      {user.role}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
