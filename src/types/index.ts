@@ -8,3 +8,8 @@ export type {
   MagicLoginResponse,
   MagicLoginError,
 } from "./auth";
+export type {
+  User as UserType,
+  CreateUserRequest,
+  UpdateUserRequest,
+} from "./user";
