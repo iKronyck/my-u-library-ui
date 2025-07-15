@@ -3,23 +3,23 @@ import { MainLayout } from "@/components/layouts";
 import { ProtectedRoute } from "@/components/layouts";
 import { useAuthStore } from "@/stores/auth-store";
 
-export default function LibrarianLayout({
+export default function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <ProtectedRoute requiredRole="student">
-      <LibrarianLayoutContent>{children}</LibrarianLayoutContent>
+      <StudentLayoutContent>{children}</StudentLayoutContent>
     </ProtectedRoute>
   );
 }
 
-function LibrarianLayoutContent({ children }: { children: React.ReactNode }) {
+function StudentLayoutContent({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
 
   return (
-    <MainLayout user={{ name: user?.name || "Usuario", role: "librarian" }}>
+    <MainLayout user={{ name: user?.name || "Usuario", role: "student" }}>
       {children}
     </MainLayout>
   );
