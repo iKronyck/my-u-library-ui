@@ -3,7 +3,7 @@ import { apiClient } from "@/api/client";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { MagicLoginResponse, MagicLoginError } from "../../types/auth";
-import { useAuthStore } from "../../stores/auth-store";
+import { useAuthStore } from "@/stores/auth-store";
 import { useRouter } from "next/navigation";
 
 const verifyMagicLink = async (token: string): Promise<MagicLoginResponse> => {

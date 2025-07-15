@@ -1,4 +1,4 @@
-import { useAuthStore } from "../stores/auth-store";
+import { useAuthStore } from "@/stores/auth-store";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { useMagicLogin } from "./auth";
