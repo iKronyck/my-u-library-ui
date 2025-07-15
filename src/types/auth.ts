@@ -7,14 +7,16 @@ export interface User {
 
 export interface AuthState {
   token: string | null;
+  refreshToken: string | null;
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 
   // Actions
   setToken: (token: string) => void;
+  setRefreshToken: (refreshToken: string) => void;
   setUser: (user: User) => void;
-  login: (token: string, user: User) => void;
+  login: (token: string, user: User, refreshToken?: string) => void;
   logout: () => void;
   setLoading: (loading: boolean) => void;
 }
@@ -31,9 +33,13 @@ export interface ResendMagicLinkError {
   error: string;
 }
 
+export interface MagicLoginRequest {
+  token: string;
+}
+
 export interface MagicLoginResponse {
-  access_token: string;
-  refresh_token: string;
+  access: string;
+  refresh: string;
   user: {
     id: string;
     first_name: string;

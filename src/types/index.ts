@@ -1,4 +1,10 @@
-export type { Book, CreateBookRequest, UpdateBookRequest } from "./book";
+export type {
+  Book,
+  CreateBookRequest,
+  UpdateBookRequest,
+  LoanBookRequest,
+  BorrowedBook,
+} from "./book";
 export type {
   User,
   AuthState,
