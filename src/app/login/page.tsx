@@ -2,8 +2,21 @@
 import { AuthLayout } from "@/components/layouts";
 import Image from "next/image";
 import Logo from "@/assets/svg/logo.svg";
+import { useLogin } from "@/hooks/auth";
+import { useState } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const { mutate: sendMagicLink, isPending } = useLogin();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      return;
+    }
+    sendMagicLink({ email: email.trim() });
+  };
+
   return (
     <AuthLayout className="bg-background">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl !shadow-md">
@@ -14,23 +27,32 @@ export default function Login() {
           </header>
         </div>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <input
-            value=""
-            onChange={() => {}}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="w-full p-2 border border-gray-300 rounded-md focus:placeholder:text-primary"
+            className="w-full p-2 border border-gray-300 rounded-md focus:placeholder:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             type="email"
+            required
+            disabled={isPending}
           />
 
           <button
             type="submit"
-            onClick={() => {
-              // router.push("/dashboard");
-            }}
+            disabled={isPending || !email.trim()}
             className="flex w-full items-center justify-center bg-primary text-white p-2 rounded-md font-bold hover:bg-pink-400 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <h1 className="text-lg font-bold text-center">Iniciar Sesión</h1>
+            {isPending ? (
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <span>Sending...</span>
+              </div>
+            ) : (
+              <span className="text-lg font-bold text-center">
+                Send Magic Link
+              </span>
+            )}
           </button>
         </form>
       </div>
