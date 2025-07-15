@@ -9,7 +9,7 @@ export default function LibrarianLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute requiredRole="librarian">
+    <ProtectedRoute requiredRole="student">
       <LibrarianLayoutContent>{children}</LibrarianLayoutContent>
     </ProtectedRoute>
   );
